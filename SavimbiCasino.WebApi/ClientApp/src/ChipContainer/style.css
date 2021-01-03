@@ -1,0 +1,11 @@
+.Chips {
+    display: inline-block;
+}
+
+.Chips .ChipContainer {
+    margin-right: 20px;
+}
+
+.Chips .ChipContainer:last-child {
+    margin-right: 0;
+}

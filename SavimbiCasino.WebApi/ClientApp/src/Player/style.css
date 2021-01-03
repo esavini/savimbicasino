@@ -1,0 +1,20 @@
+.Player {
+    display: block;
+    align-self: flex-end;
+}
+
+.Name {
+    background: white;
+    color: black;
+    font-weight: bold;
+    width: fit-content;
+    padding: 3px;
+    margin: 10px auto 0 auto;
+    border-radius: 3px 2px;
+}
+
+.Cat {
+    max-height: 100px;
+    margin: 0 auto 5px 0;
+    border-radius: 50%;
+}
