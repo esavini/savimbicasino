@@ -2,8 +2,6 @@
 
 import './style.css'
 import {Button, Table} from "react-bootstrap";
-import Chip from "../Chip";
-import ChipContainer from "../ChipContainer";
 
 export default class DealerAdmin extends React.Component {
 

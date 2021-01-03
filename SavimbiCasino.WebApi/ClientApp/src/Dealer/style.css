@@ -5,7 +5,7 @@
 .DealerHeader {
     background-color: #282c34;
     padding: 5px;
-    width: calc(100% - 10px);
+    width: 100%;
     font-size: 20px;
     color: #fff;
 }
@@ -22,7 +22,7 @@
 
 .Players {
     display: flex;
-    justify-content: space-between;
+    justify-content: space-evenly;
     flex-direction: row-reverse;
 }
 

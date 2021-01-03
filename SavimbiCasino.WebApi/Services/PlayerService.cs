@@ -82,7 +82,7 @@ namespace SavimbiCasino.WebApi.Services
             {
                 throw new ArgumentException(nameof(password));
             }
-            
+
             Player player = await _dbContext.Players.FirstOrDefaultAsync(p => p.Username == username);
 
             if (player != null)
@@ -98,6 +98,22 @@ namespace SavimbiCasino.WebApi.Services
 
             await _dbContext.AddAsync(player);
             await _dbContext.SaveChangesAsync();
+        }
+
+        /// <inheritdoc cref="IPlayerService.VerifyToken"/>
+        public async Task<Player> VerifyToken(string token)
+        {
+            if (token is null)
+            {
+                throw new ArgumentNullException(nameof(token));
+            }
+
+            if (string.IsNullOrWhiteSpace(token))
+            {
+                throw new ArgumentException(nameof(token));
+            }
+
+            return await _dbContext.Players.FirstOrDefaultAsync(p => p.SessionToken == token);
         }
     }
 }

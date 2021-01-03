@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using SavimbiCasino.WebApi.Exceptions;
+using SavimbiCasino.WebApi.Models;
 
 namespace SavimbiCasino.WebApi.Services
 {
@@ -31,5 +32,14 @@ namespace SavimbiCasino.WebApi.Services
         /// <exception cref="PlayerAlreadyExistsException">When a player with the same <paramref name="username"/> already exists.</exception>
         /// <returns>The task.</returns>
         Task CreateAccountAsync(string username, string password);
+
+        /// <summary>
+        /// Verifies a player token.
+        /// </summary>
+        /// <param name="token">The token.</param>
+        /// <exception cref="ArgumentNullException">When <paramref name="token"/> is null.</exception>
+        /// <exception cref="ArgumentException">When <paramref name="token"/> is empty or whitespace.</exception>
+        /// <returns>The player, if the token is valid, null otherwise.</returns>
+        Task<Player> VerifyToken(string token);
     }
 }
