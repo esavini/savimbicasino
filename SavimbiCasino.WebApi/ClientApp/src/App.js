@@ -1,6 +1,7 @@
 import Dealer from "./Dealer";
 import Admin from "./Admin";
 import PlayerConsole from "./PlayerConsole";
+import DealerAdmin from "./DealerAdmin";
 
 import React from "react";
 import {
@@ -23,7 +24,7 @@ export default class App extends React.Component {
                         <Admin/>
                     </Route>
                     <Route path="/dealer/admin/:roomName">
-                        <Dealer/>
+                        <DealerAdmin/>
                     </Route>
                     <Route path="/dealer/:roomName">
                         <Dealer/>

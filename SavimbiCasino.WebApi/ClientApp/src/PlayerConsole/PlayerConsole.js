@@ -26,7 +26,7 @@ export default class PlayerConsole extends React.Component {
                 <Button variant="success">Carta</Button>
                 <Button variant="danger">Stop</Button>
                 <Button>Dividi</Button>
-                <Button variant="light">Raddoppia</Button>
+                <Button variant="warning">Raddoppia</Button>
                 <ChipContainer style={{display:'block'}}>
                     <Chip value={1} onClick={this.bet}/>
                     <Chip value={5} onClick={this.bet}/>
