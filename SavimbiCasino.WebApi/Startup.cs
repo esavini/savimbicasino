@@ -1,3 +1,4 @@
+using AutoMapper;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
@@ -26,18 +27,21 @@ namespace SavimbiCasino.WebApi
             configurationBuilder.SetBasePath(hostEnvironment.ContentRootPath)
                 .AddConfiguration(configuration)
                 .AddJsonFile("appsettings.json", false, true)
+                .AddUserSecrets<Startup>()
                 .AddEnvironmentVariables();
 
             _configuration = configurationBuilder.Build();
         }
-
-
+        
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<SavimbiCasinoDbContext>(builder =>
                 builder.UseNpgsql(_configuration.GetConnectionString(DbContextConsts.ConnectionString)));
 
+            services.AddAutoMapper(GetType());
+            
             services.AddTransient<IPlayerService, PlayerService>();
+            services.AddTransient<IRoomService, RoomService>();
             services.AddTransient<IValidator<CredentialsDto>, CredentialsDtoValidator>();
 
             services.AddControllersWithViews()

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using SavimbiCasino.WebApi.Enums;
 
 namespace SavimbiCasino.WebApi.Models
@@ -9,6 +10,6 @@ namespace SavimbiCasino.WebApi.Models
         
         public string DealerConnectionId { get; set; }
         
-        public IList<Bet> Bets { get; set; }
+        public IList<Tuple<Player, Bet, string>> Players { get; set; }
     }
 }

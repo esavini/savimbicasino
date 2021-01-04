@@ -4,14 +4,14 @@ import './style.css'
 import {Alert, Button, Form, FormText, Spinner, Table} from "react-bootstrap";
 import {withRouter} from "react-router-dom"
 
-class Login extends React.Component {
+class Register extends React.Component {
 
     state = {
         isLoading: false
         , errors: []
         , form: {
             username: ''
-            , password: ''
+            ,password: ''
         }
     }
 
@@ -33,56 +33,41 @@ class Login extends React.Component {
 
     onSubmit(e) {
         e.preventDefault()
-
+        
         let history = this.props.history
-
-        if (this.state.isLoading)
+        
+        if(this.state.isLoading)
             return
-
+        
         this.setState({
-            ...this.state,
-            isLoading: true
+            ...this.state
+            , isLoading: true
         })
 
-        fetch('/v1/Player/Login', {
+        fetch('/v1/Player/Register', {
             method: 'post'
             , body: JSON.stringify(this.state.form)
             , headers: {
                 'Accept': 'application/json'
-                , 'Content-Type': 'application/json'
+                ,'Content-Type': 'application/json'
             }
         }).then(response => {
-
-            if (response.status === 201 || response.status === 200) {
-                history.push("/registrationCompleted")
-                return
-            }
-
-            let newState = {
-                ...this.state,
-                errors: []
-            }
-
-            if (response.status === 404)
-                newState.errors.push("Nome utente errato!")
-
-            if (response.status === 401)
-                newState.errors.push("Password errata!")
-
-            newState.isLoading = false
-
-            this.setState(newState)
-
+            history.push("/registrationCompleted")
         }).catch(err => {
-            this.state.errors.push(err.message)
-            this.state.isLoading = false
+            let newState = {
+                ...this.state
+                , isLoading: false
+                ,errors: [err]
+            }
+            
+            this.setState(newState)
         })
     }
 
     render() {
         return (
-            <div className="LoginArea">
-                <h1 className="LoginTitle">Login</h1>
+            <div className="RegisterArea">
+                <h1 className="RegisterTitle">Registrazione</h1>
                 {
                     this.state.errors.map((text, index) => {
                         return <Alert key={index} variant="danger">
@@ -91,7 +76,7 @@ class Login extends React.Component {
                     })
                 }
                 <Form onSubmit={this.onSubmit}>
-                    <Form.Group controlId="formLogin">
+                    <Form.Group controlId="formRegister">
                         <Form.Label>Nome</Form.Label>
                         <Form.Control type="text"
                                       required
@@ -102,9 +87,12 @@ class Login extends React.Component {
                                       disabled={this.state.isLoading}
                                       onChange={this.onInputChange}
                                       value={this.state.form.username}/>
+                        <Form.Text className="text-muted">
+                            Da 3 a 10 caratteri, sono ammessi anche gli emoji.
+                        </Form.Text>
                     </Form.Group>
 
-                    <Form.Group controlId="formLoginPassword">
+                    <Form.Group controlId="formRegisterPassword">
                         <Form.Label>Password</Form.Label>
                         <Form.Control type="password"
                                       required
@@ -114,20 +102,23 @@ class Login extends React.Component {
                                       onChange={this.onInputChange}
                                       value={this.state.form.password}
                                       disabled={this.state.isLoading}/>
+                        <Form.Text className="text-muted">
+                            Minimo sei caratteri.
+                        </Form.Text>
                     </Form.Group>
+
                     <Button variant="primary" type="submit" disabled={this.state.isLoading}>
-                        <span style={{display: this.state.isLoading ? 'none' : 'block'}}>Accedi</span>
+                        <span style={{display: this.state.isLoading ? 'none' : 'block'}}>Registrati</span>
                         <Spinner animation="border"
                                  role="status"
                                  style={{display: this.state.isLoading ? 'block' : 'none'}}>
                             <span className="sr-only">Caricamento...</span>
                         </Spinner>
                     </Button>
-
                 </Form>
             </div>
         );
     }
 }
 
-export default withRouter(Login)
+export default withRouter(Register)

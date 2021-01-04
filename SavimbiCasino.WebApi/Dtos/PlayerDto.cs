@@ -10,6 +10,8 @@ namespace SavimbiCasino.WebApi.Dtos
         
         [JsonPropertyName("name")] public string Username { get; set; }
         
-        [JsonPropertyName("chips")] public IEnumerable<ChipDto> Chips { get; set; }
+        [JsonPropertyName("chips")] public IEnumerable<int> Chips { get; set; }
+        
+        [JsonPropertyName("isScratched")] public bool IsScratched { get; set; }
      }
 }

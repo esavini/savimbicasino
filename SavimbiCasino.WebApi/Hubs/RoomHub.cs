@@ -1,27 +1,28 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.SignalR;
-using Microsoft.Extensions.DependencyInjection;
 using SavimbiCasino.WebApi.Enums;
 using SavimbiCasino.WebApi.Exceptions;
 using SavimbiCasino.WebApi.Models;
 using SavimbiCasino.WebApi.Services;
-using System.Text.Json;
 using SavimbiCasino.WebApi.Dtos;
 
 namespace SavimbiCasino.WebApi.Hubs
 {
     public class RoomHub : Hub<IRoomClient>
     {
-        private readonly IDictionary<Guid, Game> _games;
+        private static IDictionary<Guid, Game> Games { get; } = new Dictionary<Guid, Game>();
 
-        private readonly IServiceProvider _serviceProvider;
+        private readonly IPlayerService _playerService;
+        private readonly IMapper _mapper;
 
-        public RoomHub(IServiceProvider serviceProvider)
+        public RoomHub(IPlayerService playerService, IMapper mapper)
         {
-            _serviceProvider = serviceProvider;
-            _games = new Dictionary<Guid, Game>();
+            _playerService = playerService;
+            _mapper = mapper;
         }
 
         public async Task Login(string token, string roomId)
@@ -57,21 +58,26 @@ namespace SavimbiCasino.WebApi.Hubs
                 throw new ArgumentException(nameof(roomId));
             }
 
-            if (!_games.Keys.Contains(roomGuid))
+            if (!Games.Keys.Contains(roomGuid))
             {
                 throw new RoomNotFoundException();
             }
-
-            var playerService = _serviceProvider.GetRequiredService<IPlayerService>();
-
-            var player = await playerService.VerifyToken(token);
+            
+            var player = await _playerService.VerifyToken(token);
 
             if (player is null)
             {
                 throw new InvalidTokenException();
             }
 
-            // ToDo
+            if (Games[roomGuid].Players.Any(p => p.Item1.Id == player.Id))
+            {
+                throw new AlreadyInGameException();
+            }
+            
+            Games[roomGuid].Players.Add(new Tuple<Player, Bet, string>(player, null, Context.ConnectionId));
+
+            await UpdateRoom(roomGuid);
         }
 
         public async Task DealerJoin(string roomId)
@@ -82,37 +88,26 @@ namespace SavimbiCasino.WebApi.Hubs
             }
 
             bool parsed = Guid.TryParse(roomId, out var roomGuid);
-
+            
             if (!parsed)
             {
                 throw new ArgumentException(nameof(roomId));
             }
 
-            if (_games.ContainsKey(roomGuid))
+            if (Games.ContainsKey(roomGuid))
             {
                 throw new RoomAlreadyInUseException();
             }
 
             // ToDo: verify the room exists in the db
 
-            _games[roomGuid] = new Game
+            Games.Add(roomGuid, new Game
             {
                 DealerConnectionId = Context.ConnectionId,
-                Bets = new List<Bet>()
-            };
-
-            await Clients.Client(_games[roomGuid].DealerConnectionId).UpdateRoom(new RoomDto
-            {
-                Players = new []
-                {
-                    new PlayerDto
-                    {
-                        Id = Guid.NewGuid(),
-                        Username = "Savimbi",
-                        Chips = null
-                    }
-                }
+                Players = new List<Tuple<Player, Bet, string>>()
             });
+
+            await UpdateRoom(roomGuid);
         }
 
         public async Task Bet(int amount)
@@ -130,6 +125,12 @@ namespace SavimbiCasino.WebApi.Hubs
         public override Task OnDisconnectedAsync(Exception exception)
         {
             return base.OnDisconnectedAsync(exception);
+        }
+
+        private async Task UpdateRoom(Guid roomGuid)
+        {
+            var dto = _mapper.Map<RoomDto>(Games[roomGuid]);
+            await Clients.Client(Games[roomGuid].DealerConnectionId).UpdateRoom(dto);
         }
     }
 }

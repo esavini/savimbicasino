@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Security.Policy;
 
 namespace SavimbiCasino.WebApi.Models
 {
@@ -18,5 +19,10 @@ namespace SavimbiCasino.WebApi.Models
         public bool IsAdmin { get; set; }
 
         public virtual IEnumerable<Room> DealerRooms { get; set; }
+
+        public override int GetHashCode()
+        {
+            return Id.GetHashCode();
+        }
     }
 }

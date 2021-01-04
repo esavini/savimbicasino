@@ -1,18 +1,21 @@
+import React from "react";
+import {HubConnectionBuilder} from "@aspnet/signalr";
+import {withRouter} from "react-router-dom";
+
 import Player from "../Player";
-import React, { useState, useEffect } from "react";
 
 import './style.css'
-import {HubConnectionBuilder} from "@aspnet/signalr";
 
-export default class Dealer extends React.Component {
-    
+
+class Dealer extends React.Component {
+
     state = {
         players: this.fillPlayers([])
     }
-    
+
     constructor(props) {
         super(props);
-        
+
         this.connection = new HubConnectionBuilder()
             .withUrl(window.location.origin + "/v1/hubs/room")
             .build()
@@ -22,8 +25,8 @@ export default class Dealer extends React.Component {
         while (players.length < 7) {
             players.push({
                 id: this.generateGuid()
-                ,name: null
-                ,chips: null
+                , name: null
+                , chips: null
             })
         }
 
@@ -36,11 +39,13 @@ export default class Dealer extends React.Component {
             return v.toString(16)
         })
     }
-    
+
     componentDidMount() {
+        let id = this.props.match.params.roomId
+
         this.connection.start()
             .then(conn => {
-                this.connection.send("DealerJoin", "38022e9f-40dd-4123-969a-55a3f237d2a9")
+                this.connection.send("DealerJoin", id)
 
                 this.connection.on('UpdateRoom', room => {
                     console.log(room)
@@ -49,8 +54,10 @@ export default class Dealer extends React.Component {
                         ...this.state
                         , players: this.fillPlayers(room.players ?? [])
                     }
-                    
+
                     this.setState(() => newState)
+                    
+                    setTimeout(() => this.connection.send("RefreshRoom"), 1000)
                 })
 
             })
@@ -67,7 +74,7 @@ export default class Dealer extends React.Component {
                     <div className="Players">
                         {
                             this.state.players.map((player) => {
-                                return <Player key={player.id} name={player.name} chips={player.chips}/>
+                                return <Player key={player.id} name={player.name} chips={player.chips} isScratched={player.isScratched}/>
                             })
                         }
                     </div>
@@ -76,3 +83,5 @@ export default class Dealer extends React.Component {
         );
     }
 }
+
+export default withRouter(Dealer)

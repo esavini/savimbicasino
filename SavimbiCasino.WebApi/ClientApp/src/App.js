@@ -11,6 +11,9 @@ import {
 } from "react-router-dom";
 
 import './App.css';
+import Register from "./Register";
+import Login from "./Login";
+import RegistrationCompleted from "./RegistrationCompleted";
 
 export default class App extends React.Component {
     render() {
@@ -23,15 +26,19 @@ export default class App extends React.Component {
                     <Route path="/admin">
                         <Admin/>
                     </Route>
-                    <Route path="/dealer/admin/:roomName">
+                    <Route path="/registrationCompleted">
+                        <RegistrationCompleted/>
+                    </Route>
+                    <Route path="/login">
+                        <Login/>
+                    </Route>
+                    <Route path="/dealer/admin/:roomId">
                         <DealerAdmin/>
                     </Route>
-                    <Route path="/dealer/:roomName">
+                    <Route path="/dealer/:roomId">
                         <Dealer/>
                     </Route>
-                    <Route path="/">
-                        <Admin/>
-                    </Route>
+                    <Route path="/" component={Register}/>
                 </Switch>
             </Router>
         )

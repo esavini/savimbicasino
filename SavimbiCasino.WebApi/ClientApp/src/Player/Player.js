@@ -24,9 +24,9 @@ export default class Player extends React.Component {
                     {this.state.chips === null ? (
                         <Chip value={null}/>
 
-                    ) : (this.state.chips.map((chip) => {
+                    ) : (this.state.chips.map((chip, index) => {
                             return (
-                                <Chip value={chip}/>
+                                <Chip key={index} value={chip}/>
                             )
                         })
                     )}
