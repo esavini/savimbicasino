@@ -17,6 +17,8 @@ namespace SavimbiCasino.WebApi.Models
         public int Money { get; set; }
 
         public bool IsAdmin { get; set; }
+        
+        public bool IsScratched { get; set; }
 
         public virtual IEnumerable<Room> DealerRooms { get; set; }
 

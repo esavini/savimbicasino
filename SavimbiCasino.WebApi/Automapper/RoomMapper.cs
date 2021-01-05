@@ -23,12 +23,11 @@ namespace SavimbiCasino.WebApi.Automapper
             }
             else
             {
-                chips.Add(source.Item2.Amount.Value  / 2);
+                chips.Add(source.Item2.Amount.Value);
             }
             
             return new PlayerDto
             {
-                Id = source.Item1.Id,
                 Username = source.Item1.Username,
                 Chips = chips
             };

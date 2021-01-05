@@ -6,7 +6,7 @@ namespace SavimbiCasino.WebApi.Dtos
 {
     public class PlayerDto
     {
-        [JsonPropertyName("id")] public Guid Id { get; set; }
+        [JsonPropertyName("id")] public Guid Id => Guid.NewGuid();
         
         [JsonPropertyName("name")] public string Username { get; set; }
         

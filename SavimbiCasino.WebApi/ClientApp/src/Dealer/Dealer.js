@@ -56,8 +56,6 @@ class Dealer extends React.Component {
                     }
 
                     this.setState(() => newState)
-                    
-                    setTimeout(() => this.connection.send("RefreshRoom"), 1000)
                 })
 
             })

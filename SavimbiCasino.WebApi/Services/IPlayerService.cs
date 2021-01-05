@@ -41,5 +41,13 @@ namespace SavimbiCasino.WebApi.Services
         /// <exception cref="ArgumentException">When <paramref name="token"/> is empty or whitespace.</exception>
         /// <returns>The player, if the token is valid, null otherwise.</returns>
         Task<Player> VerifyToken(string token);
+
+        Task<bool> VerifyMoney(Player player, int money);
+
+        Task DecreaseMoney(Player player, int money);
+        
+        Task IncrementMoney(Player player, int money);
+        
+        Task<int> GetMoney(Player player);
     }
 }

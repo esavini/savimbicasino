@@ -9,3 +9,11 @@
 .Chips .ChipContainer:last-child {
     margin-right: 0;
 }
+
+.ChipsVertical > * {
+    display: block !important;
+}
+
+.ChipsVertical > * > *:first-child {
+    margin-top: -3px !important
+}

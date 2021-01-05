@@ -6,14 +6,26 @@ export default class ChipContainer extends React.Component {
         super(props);
 
         this.state = {
-            children: props.children,
+            isVertical: this.props.variant === 'vertical'
         }
+
+        this.applyClassNames = this.applyClassNames.bind(this)
+    }
+
+    applyClassNames() {
+        let classNames = ['Chips']
+
+        if(this.state.isVertical) {
+            classNames.push('ChipsVertical')
+        }
+        
+        return classNames.join(' ')
     }
 
     render() {
         return (
-            <div className="Chips">
-                {this.state.children}
+            <div className={this.applyClassNames()}>
+                {this.props.children}
             </div>
         )
     }

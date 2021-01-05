@@ -9,8 +9,10 @@ namespace SavimbiCasino.WebApi.Automapper
     {
         public Automapper()
         {
+            CreateMap<Tuple<Player, Bet, string>, BetDto>().ConvertUsing<DealerAdminMapper>();
             CreateMap<Tuple<Player, Bet, string>, PlayerDto>().ConvertUsing<RoomMapper>();
             CreateMap<Game, RoomDto>();
+            CreateMap<Game, DealerAdminDto>();
         }
     }
 }

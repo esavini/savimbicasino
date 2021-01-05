@@ -7,6 +7,10 @@ namespace SavimbiCasino.WebApi.Hubs
     {
         Task UpdateRoom(RoomDto roomDto);
 
+        Task UpdatePlayer(PlayerGameDto playerGameDto);
+        
+        Task UpdateDealerAdmin(DealerAdminDto dealerGameDto);
+
         Task RoomClosed();
     }
 }

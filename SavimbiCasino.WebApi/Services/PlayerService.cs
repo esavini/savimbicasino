@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using SavimbiCasino.WebApi.Exceptions;
@@ -114,6 +115,40 @@ namespace SavimbiCasino.WebApi.Services
             }
 
             return await _dbContext.Players.FirstOrDefaultAsync(p => p.SessionToken == token);
+        }
+
+        public async Task<bool> VerifyMoney(Player player, int money)
+        {
+            var foundPlayer = await _dbContext.Players.FirstAsync(p => p.Id == player.Id);
+
+            return foundPlayer.Money >= money;
+        }
+
+        public async Task DecreaseMoney(Player player, int money)
+        {
+            var foundPlayer = await _dbContext.Players.FirstAsync(p => p.Id == player.Id);
+
+            foundPlayer.Money -= money;
+
+            _dbContext.Update(foundPlayer);
+            await _dbContext.SaveChangesAsync();
+        }
+
+        public async Task IncrementMoney(Player player, int money)
+        {
+            var foundPlayer = await _dbContext.Players.FirstAsync(p => p.Id == player.Id);
+
+            foundPlayer.Money += money;
+
+            _dbContext.Update(foundPlayer);
+            await _dbContext.SaveChangesAsync();
+        }
+
+        public async Task<int> GetMoney(Player player)
+        {
+            var playerFound = await _dbContext.Players.FirstAsync(p => p.Id == player.Id);
+
+            return playerFound.Money;
         }
     }
 }
