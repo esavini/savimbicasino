@@ -12,7 +12,7 @@ namespace SavimbiCasino.WebApi.Automapper
         {
             var chips = new List<int>();
 
-            if(source.Item2.Amount is null)
+            if(source.Item2?.Amount is null)
             {
                 chips = null;
             }

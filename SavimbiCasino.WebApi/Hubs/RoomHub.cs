@@ -62,7 +62,7 @@ namespace SavimbiCasino.WebApi.Hubs
             {
                 throw new RoomNotFoundException();
             }
-            
+
             var player = await _playerService.VerifyToken(token);
 
             if (player is null)
@@ -74,7 +74,7 @@ namespace SavimbiCasino.WebApi.Hubs
             {
                 throw new AlreadyInGameException();
             }
-            
+
             Games[roomGuid].Players.Add(new Tuple<Player, Bet, string>(player, null, Context.ConnectionId));
 
             await UpdateRoom(roomGuid);
@@ -88,7 +88,7 @@ namespace SavimbiCasino.WebApi.Hubs
             }
 
             bool parsed = Guid.TryParse(roomId, out var roomGuid);
-            
+
             if (!parsed)
             {
                 throw new ArgumentException(nameof(roomId));
@@ -122,15 +122,45 @@ namespace SavimbiCasino.WebApi.Hubs
         {
         }
 
-        public override Task OnDisconnectedAsync(Exception exception)
+        public override async Task OnDisconnectedAsync(Exception exception)
         {
-            return base.OnDisconnectedAsync(exception);
+            string connectionId = Context.ConnectionId;
+
+            var dealerGame = Games.Where((elem) => elem.Value.DealerConnectionId == connectionId)
+                .Select(elem => Tuple.Create(elem.Key, elem.Value)).FirstOrDefault();
+
+            if (dealerGame != null)
+            {
+                await CloseGame(dealerGame.Item1);
+                return;
+            }
+
+            var playerGame = Games.Where((elem) =>
+                    elem.Value.Players.Any(p => p.Item3 == connectionId))
+                .Select(elem => Tuple.Create(elem.Key, elem.Value)).FirstOrDefault();
+
+            if (playerGame != null)
+            {
+                var player = playerGame.Item2.Players.First(p => p.Item3 == connectionId);
+                Games[playerGame.Item1].Players.Remove(player);
+                await UpdateRoom(playerGame.Item1);
+            }
         }
 
         private async Task UpdateRoom(Guid roomGuid)
         {
             var dto = _mapper.Map<RoomDto>(Games[roomGuid]);
             await Clients.Client(Games[roomGuid].DealerConnectionId).UpdateRoom(dto);
+        }
+
+        private async Task CloseGame(Guid roomId)
+        {
+            foreach (var player in Games[roomId].Players)
+            {
+                await Clients.Client(player.Item3).RoomClosed();
+            }
+
+            Games.Remove(roomId);
         }
     }
 }

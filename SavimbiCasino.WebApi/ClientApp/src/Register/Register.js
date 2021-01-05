@@ -11,7 +11,7 @@ class Register extends React.Component {
         , errors: []
         , form: {
             username: ''
-            ,password: ''
+            , password: ''
         }
     }
 
@@ -33,15 +33,16 @@ class Register extends React.Component {
 
     onSubmit(e) {
         e.preventDefault()
-        
+
         let history = this.props.history
-        
-        if(this.state.isLoading)
+
+        if (this.state.isLoading)
             return
-        
+
         this.setState({
             ...this.state
             , isLoading: true
+            , errors: []
         })
 
         fetch('/v1/Player/Register', {
@@ -49,7 +50,7 @@ class Register extends React.Component {
             , body: JSON.stringify(this.state.form)
             , headers: {
                 'Accept': 'application/json'
-                ,'Content-Type': 'application/json'
+                , 'Content-Type': 'application/json'
             }
         }).then(response => {
             history.push("/registrationCompleted")
@@ -57,9 +58,9 @@ class Register extends React.Component {
             let newState = {
                 ...this.state
                 , isLoading: false
-                ,errors: [err]
+                , errors: [err]
             }
-            
+
             this.setState(newState)
         })
     }

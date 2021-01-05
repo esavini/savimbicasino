@@ -10,6 +10,8 @@ namespace SavimbiCasino.WebApi.Models
         
         public string DealerConnectionId { get; set; }
         
+        public string DealerAdminConnectionId { get; set; }
+        
         public IList<Tuple<Player, Bet, string>> Players { get; set; }
     }
 }

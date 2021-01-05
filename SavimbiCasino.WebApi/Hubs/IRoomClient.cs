@@ -6,5 +6,7 @@ namespace SavimbiCasino.WebApi.Hubs
     public interface IRoomClient
     {
         Task UpdateRoom(RoomDto roomDto);
+
+        Task RoomClosed();
     }
 }

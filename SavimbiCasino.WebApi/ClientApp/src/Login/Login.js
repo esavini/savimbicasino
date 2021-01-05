@@ -3,6 +3,7 @@ import React from "react";
 import './style.css'
 import {Alert, Button, Form, FormText, Spinner, Table} from "react-bootstrap";
 import {withRouter} from "react-router-dom"
+import UserContext, {UserProvider} from "../UserContext";
 
 class Login extends React.Component {
 
@@ -13,6 +14,7 @@ class Login extends React.Component {
             username: ''
             , password: ''
         }
+        , from: null
     }
 
     constructor(params) {
@@ -34,14 +36,16 @@ class Login extends React.Component {
     onSubmit(e) {
         e.preventDefault()
 
-        let history = this.props.history
-
         if (this.state.isLoading)
             return
+
+        let from = this.props.location.state.from
+        let history = this.props.history
 
         this.setState({
             ...this.state,
             isLoading: true
+            , errors: []
         })
 
         fetch('/v1/Player/Login', {
@@ -54,8 +58,7 @@ class Login extends React.Component {
         }).then(response => {
 
             if (response.status === 201 || response.status === 200) {
-                history.push("/registrationCompleted")
-                return
+                return response.json();
             }
 
             let newState = {
@@ -73,10 +76,20 @@ class Login extends React.Component {
 
             this.setState(newState)
 
-        }).catch(err => {
-            this.state.errors.push(err.message)
-            this.state.isLoading = false
         })
+            .then(data => {
+                if (data === undefined) {
+                    return
+                }
+                
+                this.context.user.token = data.token
+                this.context.isLogged = true
+                history.push(from)
+            })
+            .catch(err => {
+                this.state.errors.push(err.message)
+                this.state.isLoading = false
+            })
     }
 
     render() {
@@ -129,5 +142,7 @@ class Login extends React.Component {
         );
     }
 }
+
+Login.contextType = UserContext
 
 export default withRouter(Login)

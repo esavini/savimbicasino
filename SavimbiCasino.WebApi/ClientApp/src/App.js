@@ -2,27 +2,26 @@ import Dealer from "./Dealer";
 import Admin from "./Admin";
 import PlayerConsole from "./PlayerConsole";
 import DealerAdmin from "./DealerAdmin";
+import Register from "./Register";
+import Login from "./Login";
+import RegistrationCompleted from "./RegistrationCompleted";
+import PrivateRoute from "./PrivateRoute";
 
 import React from "react";
 import {
     BrowserRouter as Router,
     Switch,
-    Route,
+    Route
 } from "react-router-dom";
 
 import './App.css';
-import Register from "./Register";
-import Login from "./Login";
-import RegistrationCompleted from "./RegistrationCompleted";
 
 export default class App extends React.Component {
     render() {
         return (
             <Router>
                 <Switch>
-                    <Route path="/room/:roomName">
-                        <PlayerConsole/>
-                    </Route>
+                    <PrivateRoute exact path="/room/:roomId" component={PlayerConsole}/>
                     <Route path="/admin">
                         <Admin/>
                     </Route>
@@ -32,10 +31,10 @@ export default class App extends React.Component {
                     <Route path="/login">
                         <Login/>
                     </Route>
-                    <Route path="/dealer/admin/:roomId">
+                    <Route exact path="/dealer/admin/:roomId">
                         <DealerAdmin/>
                     </Route>
-                    <Route path="/dealer/:roomId">
+                    <Route exact path="/dealer/:roomId">
                         <Dealer/>
                     </Route>
                     <Route path="/" component={Register}/>
