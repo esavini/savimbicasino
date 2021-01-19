@@ -25,6 +25,7 @@ class DealerAdmin extends React.Component {
         this.doubleWin = this.doubleWin.bind(this)
         this.win = this.win.bind(this)
         this.blackjack = this.blackjack.bind(this)
+        this.push = this.push.bind(this)
     }
 
     changeStatus(event) {
@@ -33,6 +34,10 @@ class DealerAdmin extends React.Component {
 
     win(event) {
         this.connection.send("Win", event.target.attributes.value.value)
+    }
+
+    push(event) {
+        this.connection.send("Push", event.target.attributes.value.value)
     }
 
     doubleWin(event) {
@@ -127,6 +132,8 @@ class DealerAdmin extends React.Component {
                                                 <Button variant="dark"
                                                         disabled={player.isDivided || player.isDouble} value={player.userId}
                                                         onClick={this.blackjack}>BlackJack</Button>
+                                                <Button variant="primary" value={player.userId}
+                                                        onClick={this.win}>Push</Button>
                                             </div>
 
                                             <Button variant="warning" style={{marginTop: '20px'}} value={player.userId}

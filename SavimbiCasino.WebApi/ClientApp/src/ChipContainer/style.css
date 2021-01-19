@@ -11,9 +11,9 @@
 }
 
 .ChipsVertical > * {
-    display: block !important;
+    display: block;
 }
 
 .ChipsVertical > * > *:first-child {
-    margin-top: -3px !important
+    margin-top: -3px !important;
 }

@@ -6,3 +6,63 @@
     width: 100%;
     margin-bottom: 20px;
 }
+
+.ChipsVisible {
+    display: block;
+}
+
+.ChipsInvisible {
+    display: none;
+}
+
+.ChipsBetButtons {
+    display: block;
+    margin: 0 auto 20px auto;
+    width: fit-content;
+}
+
+.BackButton {
+    display: block;
+    margin: 0 auto;
+    width: fit-content;
+}
+
+.BackInvisible {
+    display: none !important;
+}
+
+.BackVisible {
+    display: block;
+}
+
+.CurrentBetContainer .Chips {
+    display: flex;
+    margin: 0 auto 20px auto;
+    min-width: fit-content;
+    width: 100%;
+    max-width: 25vw;
+    flex-direction: row;
+    justify-content: space-evenly;
+}
+
+.CurrentBetContainer .Chips > div {
+    flex-basis: 100%;
+    text-align: center;
+    margin: 0 4vw;
+    padding: 5px;
+    border-radius: 3px;
+    align-content: space-around;
+}
+
+.CurrentBetContainer .Chips > div:first-child {
+    margin-left: 0;
+}
+
+.CurrentBetContainer .Chips > div:last-child {
+    margin-right: 0;
+}
+
+
+.ChipContainer {
+    margin-right: 0 !important;
+}

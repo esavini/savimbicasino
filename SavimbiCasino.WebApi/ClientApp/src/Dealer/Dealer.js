@@ -72,7 +72,7 @@ class Dealer extends React.Component {
                     <div className="Players">
                         {
                             this.state.players.map((player) => {
-                                return <Player key={player.id} name={player.name} chips={player.chips} isScratched={player.isScratched}/>
+                                return <Player class="Player-50" key={player.id} name={player.name} chips={player.chips} isScratched={player.isScratched}/>
                             })
                         }
                     </div>

@@ -219,6 +219,52 @@ namespace SavimbiCasino.WebApi.Hubs
             await UpdateDealerAdmin(game.Key);
             await UpdateRoom(game.Key);
         }
+        
+        public async Task Push(string userId)
+        {
+            var userGuid = Guid.Parse(userId);
+
+            var game = Games.First(game => game.Value.Players.Any(p => p.Item1.Id == userGuid));
+
+            if (game.Value.Status != GameStatus.Playing)
+            {
+                return;
+            }
+
+            for (int i = 0; i < Games[game.Key].Players.Count; i++)
+            {
+                if (Games[game.Key].Players[i].Item1.Id != userGuid)
+                {
+                    continue;
+                }
+
+                if (Games[game.Key].Players[i].Item2 is null)
+                {
+                    return;
+                }
+
+                var bet = Games[game.Key].Players[i].Item2.Amount ?? 0;
+
+                if (bet == 0)
+                {
+                    return;
+                }
+
+                await _playerService.IncrementMoney(Games[game.Key].Players[i].Item1, bet);
+                Games[game.Key].Players[i].Item1.Money =
+                    await _playerService.GetMoney(Games[game.Key].Players[i].Item1);
+
+                Games[game.Key].Players[i] = Tuple.Create<Player, Bet, string>(Games[game.Key].Players[i].Item1, null,
+                    Games[game.Key].Players[i].Item3);
+
+                await UpdatePlayer(Games[game.Key], Games[game.Key].Players[i].Item1, Games[game.Key].Players[i].Item2);
+
+                break;
+            }
+
+            await UpdateDealerAdmin(game.Key);
+            await UpdateRoom(game.Key);
+        }
 
         public async Task Blackjack(string userId)
         {

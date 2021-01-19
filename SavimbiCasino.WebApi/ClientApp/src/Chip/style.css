@@ -1,7 +1,7 @@
 .ChipContainer {
     position: relative;
-    height: 62px;
-    width: 62px;
+    height: 46px;
+    width: 46px;
     display: inline-block;
 }
 
@@ -9,18 +9,18 @@
     position: relative;
     display: block;
     margin: 3px;
-    border: 8px dashed white;
+    border: 4px dashed white;
     border-radius: 50%;
-    line-height: 40px;
+    line-height: 29px;
     text-align: center;
     color: white;
-    height: 56px;
-    width: 56px;
+    height: 40px;
+    width: 40px;
 }
 
 .ChipBefore {
-    width: 62px;
-    height: 62px;
+    width: 46px;
+    height: 46px;
     position: absolute;
     z-index: -1;
     top: 0;

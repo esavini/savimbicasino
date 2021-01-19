@@ -33,7 +33,7 @@ namespace SavimbiCasino.WebApi.Controllers
 
             try
             {
-                token = await _playerService.LoginAsync(credentialsDto.Username, credentialsDto.Password);
+                token = await _playerService.LoginAsync(credentialsDto.Username.Trim(), credentialsDto.Password);
             }
             catch (PlayerNotFoundException)
             {
@@ -63,7 +63,7 @@ namespace SavimbiCasino.WebApi.Controllers
 
             try
             {
-                await _playerService.CreateAccountAsync(credentialsDto.Username, credentialsDto.Password);
+                await _playerService.CreateAccountAsync(credentialsDto.Username.Trim(), credentialsDto.Password);
             }
             catch (PlayerAlreadyExistsException)
             {
